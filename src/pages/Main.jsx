@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 export default function Main({ todos }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   return (
     <>
       <Header />
