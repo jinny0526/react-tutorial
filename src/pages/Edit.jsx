@@ -1,8 +1,11 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 
 export default function Edit() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
   return (
     <Fragment>
       <Header />
@@ -22,6 +25,10 @@ export default function Edit() {
           <div>
             <input
               placeholder="제목"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               style={{
                 width: "100%",
                 height: "60px",
@@ -40,6 +47,10 @@ export default function Edit() {
           >
             <textarea
               placeholder="내용"
+              value={content}
+              onChange={(e) => {
+                setContent(e.target.value);
+              }}
               style={{
                 resize: "none",
                 height: "100%",

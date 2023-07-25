@@ -1,10 +1,17 @@
 import React from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-export default function Detail() {
+export default function Detail({ todos }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  // url의 id값이 달라지면 각자 다른 걸 보이게 하기 위해선 써야된다는데
+  const todo = todos.find((todo) => todo.id === id);
+  // id값이 일치하면 보여주고 아니면 안보여주는 것 find자체가 만족하는 하나를 찾는거니까 아이디값이 일치할때마다 그 일치하는 값을 보여주기. 근데 이게 맞겠지?
+
   return (
     <>
       <Header />
@@ -16,7 +23,7 @@ export default function Detail() {
             padding: "12px",
           }}
         >
-          제목
+          {todo.title}
         </h1>
         <div
           style={{
@@ -26,10 +33,7 @@ export default function Detail() {
             padding: "12px",
           }}
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad doloribus
-          blanditiis vitae sapiente. Expedita delectus nihil animi pariatur,
-          labore quod officiis dolor fugit. Mollitia quod, delectus velit
-          deleniti nihil veniam!
+          {todo.content}
         </div>
         <div
           style={{
@@ -56,7 +60,11 @@ export default function Detail() {
           </button>
           <button
             onClick={() => {
-              alert("삭제할까?");
+              dispatch({
+                type: "DELETE_TODO",
+                payload: todo.id,
+              });
+              navigate("/");
             }}
             style={{
               border: "none",
