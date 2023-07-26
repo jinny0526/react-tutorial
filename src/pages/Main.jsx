@@ -2,11 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { useDispatch } from "react-redux";
 
-export default function Main({ todos }) {
+export default function Main({ todos, setTodos }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const deleteTodo = (id) => {
+    const newTodos = todos.filter((todo) => todo?.id !== id);
+    setTodos(newTodos);
+  };
 
   return (
     <>
@@ -65,7 +68,7 @@ export default function Main({ todos }) {
               <div>
                 <button
                   onClick={() => {
-                    navigate("/edit");
+                    navigate(`/edit/${todo.id}`);
                   }}
                   style={{
                     border: "none",
@@ -81,13 +84,9 @@ export default function Main({ todos }) {
                 </button>
                 <button
                   onClick={() => {
-                    dispatch({
-                      type: "DELETE_TODO",
-                      payload: todo.id,
-                    });
+                    deleteTodo(todo.id);
+
                     //추가하기처럼 삭제기능을 가져와서 삭제하기
-                    navigate("/");
-                    // //메인페이지로 이동하게 만들기
                   }}
                   style={{
                     border: "none",

@@ -5,31 +5,29 @@ import { useDispatch } from "react-redux";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
 
-export default function Create() {
+export default function Create({ todos, setTodos }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const addTodo = () => {
+    const newTodo = {
+      id: nanoid(),
+      title: title,
+      content: content,
+      author: "",
+    };
+    setTodos([...todos, newTodo]);
+  };
+  //작성자버전 넣기
+  //새로운 데이터 가져오기
   return (
     <>
       <Header />
       <Container>
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log("제출!");
-            dispatch({
-              type: "NEW_TODO",
-              payload: {
-                id: nanoid(),
-                title: title,
-                content: content,
-              },
-            });
-          }}
-          //특정동작을 선택해야되기에 onsumbit 사용
-          //dipatch로 모듈스에 액션값을 불러올 수 있어서 가져온 후 필요한 값을 모두 적어준뒤 적용시킴
+          //새로고침 막기 e prevent~~
           style={{
             height: "600px",
             display: "flex",
@@ -79,7 +77,6 @@ export default function Create() {
             />
           </div>
           <button
-            type="submit"
             style={{
               width: "100%",
               height: "40px",
@@ -89,11 +86,15 @@ export default function Create() {
               backgroundColor: "skyblue",
               cursor: "pointer",
             }}
+            type="submit"
             onClick={() => {
+              addTodo();
               navigate("/");
-              //홈화면으로 가는거 같이 넣기
-              //type="submit" 전송 기능을 담당한다는 거 배웠음 처음에 왜 홈화면 이동만 하면 추가하기 기능이 되지 않아서 뭐지뭐지했는데 type 지정을 안해서... 자랑스럽게 모름
             }}
+
+            // navigate("/");
+
+            //type="submit" 전송 기능을 담당한다는 거 배웠음 처음에 왜 홈화면 이동만 하면 추가하기 기능이 되지 않아서 뭐지뭐지했는데 type 지정을 안해서... 자랑스럽게 모름
           >
             추가하기
           </button>
