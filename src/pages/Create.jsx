@@ -1,33 +1,24 @@
 import React, { useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
+import { ADD_TODO } from "../redux/modules/todos";
 
-export default function Create({ todos, setTodos }) {
+export default function Create() {
+  const todos = useSelector((state) => state.todos);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const addTodo = () => {
-    const newTodo = {
-      id: nanoid(),
-      title: title,
-      content: content,
-      author: "",
-    };
-    setTodos([...todos, newTodo]);
-  };
-  //작성자버전 넣기
-  //새로운 데이터 가져오기
   return (
     <>
       <Header />
       <Container>
         <form
-          //새로고침 막기 e prevent~~
           style={{
             height: "600px",
             display: "flex",
@@ -87,14 +78,19 @@ export default function Create({ todos, setTodos }) {
               cursor: "pointer",
             }}
             type="submit"
-            onClick={() => {
-              addTodo();
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(
+                ADD_TODO({
+                  id: nanoid(),
+                  title: title,
+                  content: content,
+                  author: "",
+                })
+              );
+
               navigate("/");
             }}
-
-            // navigate("/");
-
-            //type="submit" 전송 기능을 담당한다는 거 배웠음 처음에 왜 홈화면 이동만 하면 추가하기 기능이 되지 않아서 뭐지뭐지했는데 type 지정을 안해서... 자랑스럽게 모름
           >
             추가하기
           </button>

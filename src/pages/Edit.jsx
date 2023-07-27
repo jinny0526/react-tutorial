@@ -2,35 +2,35 @@ import React, { Fragment, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { EDIT_TODO } from "../redux/modules/todos";
 
-export default function Edit({ todos, setTodos }) {
-  //아 맨날 props 개떡같이 써 왜 똑같이 쓰질 못하니...
+export default function Edit() {
+  const todos = useSelector((state) => state.todos);
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const todo = todos.find((todo) => todo?.id === id);
 
   const [newtitle, setNewtitle] = useState(todo.title);
   const [newcontent, setNewcontent] = useState(todo.content);
 
-  const EditTodo = () => {
-    //새로운 todo값은 기존의 todo의 값을 새로운 배열인데
-    //아이디가 같으면 일단 수정이 되도록 한다.
-    //그 수정된 값은 일단 기존값에서 수정된 값을 대체하는 방식으로 사용된다.
-    //아니면 일단 리턴해야되니까 조건문을 써야되나?
-    //끝나면새로운 값이 나오게 한다.
-    //값을 다가져오고... 이걸 어떻게 하지?
-
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, title: newtitle, content: newcontent };
-        // 튜터님 이 마지막 부분은 도움 좀 받았습니다..... 이걸 대체하는 방법을 모르겠어서 다시 공부할께요
-      } else return todo;
-    });
-    setTodos(newTodos);
+  const EditTodo = (e) => {
+    e.preventDefault();
+    dispatch(
+      EDIT_TODO({
+        id: todo.id,
+        changes: {
+          title: newtitle,
+          content: newcontent,
+        },
+      })
+    );
     navigate("/");
   };
+  //근데 이거 밑에 뒀더니 e.preventDefault()랑 navigate("/"); 안넣어져서 따로 뺏는데 이부분 잘 모르겠어요..
+  //나머진 아이디값 넣고 바뀌는 부분 넣고 기능 가져와서 해결!
 
-  //일단 수정할 부분들 값을 하나하나 가져와서 올렸고
   return (
     <Fragment>
       <Header />

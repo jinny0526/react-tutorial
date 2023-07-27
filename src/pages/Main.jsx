@@ -2,14 +2,18 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../common/Header";
 import Container from "../common/Container";
+import { useDispatch, useSelector } from "react-redux";
+import { DELETE_TODO } from "../redux/modules/todos";
 
-export default function Main({ todos, setTodos }) {
+export default function Main() {
+  const todos = useSelector((state) => state.todos);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const deleteTodo = (id) => {
-    const newTodos = todos.filter((todo) => todo?.id !== id);
-    setTodos(newTodos);
-  };
+  // const deleteTodo = (id) => {
+  //   const newTodos = todos.filter((todo) => todo?.id !== id);
+  //   setTodos(newTodos);
+  // };
 
   return (
     <>
@@ -83,8 +87,10 @@ export default function Main({ todos, setTodos }) {
                   수정
                 </button>
                 <button
-                  onClick={() => {
-                    deleteTodo(todo.id);
+                  onClick={(e) => {
+                    alert("삭제할까?");
+                    e.preventDefault();
+                    dispatch(DELETE_TODO(todo.id));
 
                     //추가하기처럼 삭제기능을 가져와서 삭제하기
                   }}
