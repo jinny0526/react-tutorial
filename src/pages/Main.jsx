@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { DELETE_TODO } from "../redux/modules/todos";
+import { deleteTodo } from "../redux/modules/todos";
 
 export default function Main() {
   const todos = useSelector((state) => state.todos);
@@ -20,9 +20,7 @@ export default function Main() {
       <Header />
       <Container>
         {todos.map((todo) => (
-          //  {todos.map((todo) => { return <div>{todo}</div>;})} 이부분 좀 응용했습니다... 죄송합니다
-          // todos라는 배열을 각각 반복하고 그것들에 대한 것을 사용하여 새로운 배열을 만든다고 하는데 그냥 형태를 외우고 있는 것 같지 이해해서 쓰는지 잘 모르겠음
-          // 다시 공부할께요
+          // map 쓰는 방법 다시 공부하기
           <div
             key={todo.id}
             style={{
@@ -38,7 +36,6 @@ export default function Main() {
             <div
               onClick={() => {
                 navigate(`/detail/${todo.id}`);
-                //각자의 아이디값에 맞게 디테일로 넘어가게 하기 근데 왜 안넘어갈까?
               }}
               style={{
                 flex: 4,
@@ -90,7 +87,7 @@ export default function Main() {
                   onClick={(e) => {
                     alert("삭제할까?");
                     e.preventDefault();
-                    dispatch(DELETE_TODO(todo.id));
+                    dispatch(deleteTodo(todo.id));
 
                     //추가하기처럼 삭제기능을 가져와서 삭제하기
                   }}

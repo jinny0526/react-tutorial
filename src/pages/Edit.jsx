@@ -3,22 +3,23 @@ import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { EDIT_TODO } from "../redux/modules/todos";
+import { editTodo } from "../redux/modules/todos";
 
 export default function Edit() {
   const todos = useSelector((state) => state.todos);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const todo = todos.find((todo) => todo?.id === id);
-
-  const [newtitle, setNewtitle] = useState(todo.title);
-  const [newcontent, setNewcontent] = useState(todo.content);
+  const todo = todos.find((todo) => todo.id === id);
+  //or 연산자 알아보기
+  const [newtitle, setNewtitle] = useState(todo?.title);
+  const [newcontent, setNewcontent] = useState(todo?.content);
+  //없어야되는 부분이 어디인지 파악해보기!!
 
   const EditTodo = (e) => {
     e.preventDefault();
     dispatch(
-      EDIT_TODO({
+      editTodo({
         id: todo.id,
         changes: {
           title: newtitle,
@@ -28,8 +29,6 @@ export default function Edit() {
     );
     navigate("/");
   };
-  //근데 이거 밑에 뒀더니 e.preventDefault()랑 navigate("/"); 안넣어져서 따로 뺏는데 이부분 잘 모르겠어요..
-  //나머진 아이디값 넣고 바뀌는 부분 넣고 기능 가져와서 해결!
 
   return (
     <Fragment>

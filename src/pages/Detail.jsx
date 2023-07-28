@@ -3,7 +3,7 @@ import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { DELETE_TODO } from "../redux/modules/todos";
+import { deleteTodo } from "../redux/modules/todos";
 
 export default function Detail() {
   const todos = useSelector((state) => state.todos);
@@ -11,8 +11,8 @@ export default function Detail() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const todo = todos.find((todo) => todo?.id === id);
-
+  const todo = todos.find((todo) => todo.id === id);
+  //todos에 데이터가 다들어있으니까 값이 헷갈릴 일이 없다.
   // const deleteTodo = (id) => {
   //   const newTodos = todos.filter((todo) => todo.id !== id);
   //   setTodos(newTodos);
@@ -30,6 +30,7 @@ export default function Detail() {
           }}
         >
           {todo.title}
+          {/* 여기가 없을 수도 있다. */}
         </h1>
         <div
           style={{
@@ -68,7 +69,7 @@ export default function Detail() {
             onClick={(e) => {
               alert("삭제할까?");
               e.preventDefault();
-              dispatch(DELETE_TODO(todo.id));
+              dispatch(deleteTodo(todo.id));
               navigate("/");
             }}
             style={{

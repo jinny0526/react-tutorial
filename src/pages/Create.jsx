@@ -4,10 +4,11 @@ import Container from "../common/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
-import { ADD_TODO } from "../redux/modules/todos";
+import { ADD_TODO, addTodo } from "../redux/modules/todos";
 
 export default function Create() {
-  const todos = useSelector((state) => state.todos);
+  // const todos = useSelector((state) => state.todos);
+  // 안쓰는거 문제 없는지 확인해보기
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -81,7 +82,7 @@ export default function Create() {
             onClick={(e) => {
               e.preventDefault();
               dispatch(
-                ADD_TODO({
+                addTodo({
                   id: nanoid(),
                   title: title,
                   content: content,

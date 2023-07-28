@@ -8,12 +8,9 @@ import Edit from "./pages/Edit";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 
-import { useSelector } from "react-redux";
-
 function App() {
-  const todos = useSelector((state) => state.todos);
-
-  console.log("todos", todos);
+  // const todos = useSelector((state) => state.todos);
+  //없어도 되는데 넣었다. props 안내려보내도 되게 하려고 그니까 안써도 됨
 
   return (
     // 페이지 이동에 사용되는 Route 태그를 위해선 Routes로 먼저 감싸야 한다.
