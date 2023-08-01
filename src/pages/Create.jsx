@@ -4,7 +4,7 @@ import Container from "../common/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
-import { ADD_TODO, addTodo } from "../redux/modules/todos";
+import { addTodo } from "../redux/modules/todosSlice";
 
 export default function Create() {
   // const todos = useSelector((state) => state.todos);

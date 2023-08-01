@@ -3,24 +3,36 @@ import { useNavigate } from "react-router-dom";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTodo } from "../redux/modules/todos";
+import { deleteTodo } from "../redux/modules/todosSlice";
 
 export default function Main() {
   const todos = useSelector((state) => state.todos);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const deleteTodo = (id) => {
-  //   const newTodos = todos.filter((todo) => todo?.id !== id);
-  //   setTodos(newTodos);
-  // };
-
   return (
     <>
       <Header />
+      <button
+        onClick={() => {
+          navigate("/create");
+        }}
+        style={{
+          display: "flex",
+          width: "40px",
+          border: "none",
+          padding: "12px",
+          borderRadius: "6px",
+          backgroundColor: "#78C1F3",
+          color: "white",
+          cursor: "pointer",
+          justifyContent: "flex-end",
+        }}
+      >
+        추가
+      </button>
       <Container>
         {todos.map((todo) => (
-          // map 쓰는 방법 다시 공부하기
           <div
             key={todo.id}
             style={{

@@ -3,7 +3,7 @@ import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { editTodo } from "../redux/modules/todos";
+import { editTodo } from "../redux/modules/todosSlice";
 
 export default function Edit() {
   const todos = useSelector((state) => state.todos);

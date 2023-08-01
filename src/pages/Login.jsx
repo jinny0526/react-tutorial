@@ -1,10 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { addCurrentUser } from "../redux/modules/loginSlice";
+import { auth } from "../firebase";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+
+  const signInFunc = async (e) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      return alert("이메일과 비밀번호 둘다 입력해주세요");
+    }
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      //유저의 정보를 추가하는 법
+      dispatch(
+        addCurrentUser({
+          currentUser: {
+            name: "nickname",
+          },
+          isLogin: true,
+        })
+      );
+
+      navigate("/");
+    } catch (error) {
+      console.log(error.code);
+      if (error.code === "auth/user-not-found") {
+        alert("이메일이 일치하기 않습니다.");
+      } else if (error.code === "auth/wrong-password") {
+        alert("비밀번호가 일치하지 않습니다.");
+      } else {
+        alert("다시 이메일과 비밀번호를 적어주세요.");
+      }
+    }
+  };
+
   return (
     <>
       <Header />
@@ -26,6 +71,11 @@ export default function Login() {
             >
               <input
                 placeholder="이메일"
+                value={email}
+                name="email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
                 style={{
                   width: "100%",
                   height: "40px",
@@ -45,6 +95,11 @@ export default function Login() {
             >
               <input
                 placeholder="비밀번호"
+                value={password}
+                name="password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
                 type="password"
                 style={{
                   width: "100%",
@@ -73,6 +128,7 @@ export default function Login() {
                   color: "white",
                   cursor: "pointer",
                 }}
+                onClick={signInFunc}
               >
                 로그인하기
               </button>
