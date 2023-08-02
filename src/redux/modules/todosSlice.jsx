@@ -4,20 +4,20 @@ import { nanoid } from "nanoid";
 const initialState = [
   {
     id: nanoid(),
-    title: "알고리즘 어려워..",
-    content: "안해",
+    title: "회원가입",
+    content: "오류대잔치",
     author: "바보1",
   },
   {
     id: nanoid(),
-    title: "타입스트립트 풀기싫어",
-    content: "근데 뭔소린지 모르겠어....",
+    title: "로그인",
+    content: "뭐가 다 난리다.",
     author: "바보2.",
   },
   {
     id: nanoid(),
-    title: "투두리스트 바꿔보기",
-    content: "기본기능도 해설강의 또 본다...",
+    title: "타입스크립트",
+    content: "못하겠다.",
     author: "바보3",
   },
 ];

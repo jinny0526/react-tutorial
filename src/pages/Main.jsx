@@ -4,35 +4,18 @@ import Header from "../common/Header";
 import Container from "../common/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTodo } from "../redux/modules/todosSlice";
-import { onAuthStateChanged } from "@firebase/auth";
-import { auth } from "../firebase";
 
-export default function Main() {
+export default function Main({ userEmail }) {
   const todos = useSelector((state) => state.todos);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [currentUser, setCurrentUser] = useState();
-  const [userEmail, setUserEmail] = useState();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-
-      if (user) {
-        setUserEmail(user.email);
-      } else {
-        setUserEmail("");
-      }
-    });
-  }, []);
-  //user의 현 상태를 확인해서 로그인 유무를 확인하는 기능인데 이부분을 이해해서 썼다기본단 그냥 있어서 갖다 붙인것같음 useeffect 여전히 조금피드백때 혼날께요
   return (
     <>
       <Header />
       <button
         onClick={() => {
-          if (currentUser) {
+          if (userEmail) {
             navigate("/create");
           } else {
             alert("로그인이 되어있지 않습니다.");

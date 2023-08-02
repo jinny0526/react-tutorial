@@ -4,10 +4,8 @@ import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editTodo } from "../redux/modules/todosSlice";
-import { onAuthStateChanged } from "@firebase/auth";
-import { auth } from "../firebase";
 
-export default function Edit() {
+export default function Edit({ userEmail }) {
   const todos = useSelector((state) => state.todos);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -17,23 +15,6 @@ export default function Edit() {
   const [newtitle, setNewtitle] = useState(todo?.title);
   const [newcontent, setNewcontent] = useState(todo?.content);
 
-  const [userEmail, setUserEmail] = useState("");
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserEmail(user.email);
-      } else {
-        setUserEmail("");
-      }
-    });
-    //로그인이 되면 현재이메일을 표시하게 아니면 그냥 아무것도 뜨지않게 하기
-  }, []);
-  //useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     setCurrentUser(user);
-  //   });
-  // }, []); 이부분 그대로 가져와서 좀 바꿈
   const EditTodo = (e) => {
     e.preventDefault();
     if (userEmail === todo.author) {

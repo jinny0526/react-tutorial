@@ -4,7 +4,6 @@ import Container from "../common/Container";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { addCurrentUser } from "../redux/modules/loginSlice";
 import { auth } from "../firebase";
 
 export default function Login() {
@@ -26,26 +25,28 @@ export default function Login() {
         email,
         password
       );
-      const user = userCredential.user;
-      //유저의 정보를 추가하는 법
-      dispatch(
-        addCurrentUser({
-          currentUser: {
-            name: "nickname",
-          },
-          isLogin: true,
-        })
-      );
+
+      //const user = userCredential.user;
+      // //유저의 정보를 추가하는 법 근데 안쓰더라...
+      // dispatch(
+      //   addCurrentUser({
+      //     currentUser: {
+      //       name: "nickname",
+      //     },
+      //     isLogin: true,
+      //   })
+      // );
 
       navigate("/");
     } catch (error) {
       console.log(error.code);
       if (error.code === "auth/user-not-found") {
-        alert("이메일이 일치하기 않습니다.");
+        alert("해당 이메일에 대한 계정이 없습니다.");
       } else if (error.code === "auth/wrong-password") {
         alert("비밀번호가 일치하지 않습니다.");
       } else {
-        alert("다시 이메일과 비밀번호를 적어주세요.");
+        alert("무엇이 문제인지 파악되지않았으니 기다려주세요.");
+        //파이어베이스가 잘못된 경우도 있을 수 있음 ,공식문서보고 더 찾아서 넣기
       }
     }
   };

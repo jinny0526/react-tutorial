@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTodo } from "../redux/modules/todosSlice";
+import { onAuthStateChanged } from "@firebase/auth";
+import { auth } from "../firebase";
 
-export default function Detail() {
+export default function Detail({ userEmail }) {
   const todos = useSelector((state) => state.todos);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -13,17 +15,6 @@ export default function Detail() {
 
   const todo = todos.find((todo) => todo.id === id);
 
-  const [userEmail, setUserEmail] = useState();
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserEmail(user.email);
-      } else {
-        setUserEmail("");
-      }
-    });
-  }, []);
   return (
     <>
       <Header />

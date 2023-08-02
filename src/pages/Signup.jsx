@@ -47,6 +47,7 @@ export default function Signup() {
     } catch (error) {
       console.error("Signup Error:", error);
     }
+    //alert 창으로 바꾸기 코드 메세지나 이런걸 바꾸기
   };
 
   return (
