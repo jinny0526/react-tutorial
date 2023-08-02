@@ -5,7 +5,7 @@ const initialState = {
   isLogin: false,
 };
 //로그인 정보 넣기
-export const loginSlice = createSlice({
+export const login = createSlice({
   name: "login",
   initialState,
   reducers: {
@@ -16,5 +16,5 @@ export const loginSlice = createSlice({
   },
 });
 //밖으로 사용할 수 잇도록 내보내기
-export const { addCurrentUser } = loginSlice.actions;
-export default loginSlice.reducer;
+export const { addCurrentUser } = login.actions;
+export default login.reducer;

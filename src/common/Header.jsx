@@ -7,13 +7,14 @@ import { auth } from "../firebase";
 export default function Header() {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
+
   //로그아웃 만들어보기
   const 로그아웃 = async () => {
     try {
       await signOut(auth);
       //Firebase 인증에서 제공하는 로그아웃 기능을 빌려왔습니다.
       setCurrentUser(null);
-      // setCurrentUser의 상태를 null로 설정합
+      // setCurrentUser의 상태를 null로 설정한다.
       navigate("/login");
     } catch (error) {
       console.error("로그아웃이 실패했습니다:", error);
@@ -68,9 +69,8 @@ export default function Header() {
                 color: "white",
                 cursor: "pointer",
               }}
-              onClick={로그아웃}
             >
-              로그아웃
+              {currentUser}
             </button>
             <button
               style={{
@@ -82,8 +82,9 @@ export default function Header() {
                 color: "white",
                 cursor: "pointer",
               }}
+              onClick={로그아웃}
             >
-              {currentUser}
+              로그아웃
             </button>
           </>
         ) : (

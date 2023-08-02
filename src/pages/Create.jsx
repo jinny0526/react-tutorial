@@ -5,15 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
 import { addTodo } from "../redux/modules/todosSlice";
+import { auth } from "../firebase";
 
 export default function Create() {
-  // const todos = useSelector((state) => state.todos);
-  // 안쓰는거 문제 없는지 확인해보기
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const 현재이메일 = auth.currentUser.email;
+  //파이어베이스에 저장된 사용자의 이메일이 있는지 확인하고 있는 경우 인증된 사용자의 이메일을 띄운다.
 
   return (
     <>
@@ -86,7 +87,7 @@ export default function Create() {
                   id: nanoid(),
                   title: title,
                   content: content,
-                  author: "",
+                  author: 현재이메일,
                 })
               );
 

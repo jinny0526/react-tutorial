@@ -12,11 +12,8 @@ export default function Detail() {
   const { id } = useParams();
 
   const todo = todos.find((todo) => todo.id === id);
-  //todos에 데이터가 다들어있으니까 값이 헷갈릴 일이 없다.
-  // const deleteTodo = (id) => {
-  //   const newTodos = todos.filter((todo) => todo.id !== id);
-  //   setTodos(newTodos);
-  // };
+
+  const [userEmail, setUserEmail] = useState("");
 
   return (
     <>
