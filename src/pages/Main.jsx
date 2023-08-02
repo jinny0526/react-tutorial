@@ -19,7 +19,7 @@ export default function Main() {
       setCurrentUser(user);
     });
   }, []);
-  //user의 현 상태를 확인해서 로그인 유무를 확인하는 기능인데 이부분을 이해해서 썼다기본단 그냥 있어서 갖다 붙인것같음 피드백때 혼날께요
+  //user의 현 상태를 확인해서 로그인 유무를 확인하는 기능인데 이부분을 이해해서 썼다기본단 그냥 있어서 갖다 붙인것같음 useeffect 여전히 조금 어렵네요. 피드백때 혼날께요
   return (
     <>
       <Header />
