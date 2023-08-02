@@ -13,8 +13,17 @@ export default function Detail() {
 
   const todo = todos.find((todo) => todo.id === id);
 
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState();
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserEmail(user.email);
+      } else {
+        setUserEmail("");
+      }
+    });
+  }, []);
   return (
     <>
       <Header />
@@ -48,7 +57,11 @@ export default function Detail() {
         >
           <button
             onClick={() => {
-              navigate(`/edit/${todo.id}`);
+              if (userEmail === todo.author) {
+                navigate(`/edit/${todo.id}`);
+              } else {
+                alert("작성자가 아니니 로그인해주세요.");
+              }
             }}
             style={{
               border: "none",
@@ -64,10 +77,14 @@ export default function Detail() {
           </button>
           <button
             onClick={(e) => {
-              alert("삭제할까?");
-              e.preventDefault();
-              dispatch(deleteTodo(todo.id));
-              navigate("/");
+              if (userEmail === todo.author) {
+                alert("삭제할까?");
+                e.preventDefault();
+                dispatch(deleteTodo(todo.id));
+              } else {
+                alert("작성자가 아니니 로그인해주세요.");
+              }
+              //추가하기처럼 삭제기능을 가져와서 삭제하기
             }}
             style={{
               border: "none",

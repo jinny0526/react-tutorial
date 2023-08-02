@@ -12,14 +12,21 @@ export default function Main() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState();
+  const [userEmail, setUserEmail] = useState();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+
+      if (user) {
+        setUserEmail(user.email);
+      } else {
+        setUserEmail("");
+      }
     });
   }, []);
-  //user의 현 상태를 확인해서 로그인 유무를 확인하는 기능인데 이부분을 이해해서 썼다기본단 그냥 있어서 갖다 붙인것같음 useeffect 여전히 조금 어렵네요. 피드백때 혼날께요
+  //user의 현 상태를 확인해서 로그인 유무를 확인하는 기능인데 이부분을 이해해서 썼다기본단 그냥 있어서 갖다 붙인것같음 useeffect 여전히 조금피드백때 혼날께요
   return (
     <>
       <Header />
@@ -96,7 +103,11 @@ export default function Main() {
               <div>
                 <button
                   onClick={() => {
-                    navigate(`/edit/${todo.id}`);
+                    if (userEmail === todo.author) {
+                      navigate(`/edit/${todo.id}`);
+                    } else {
+                      alert("작성자가 아니니 로그인해주세요.");
+                    }
                   }}
                   style={{
                     border: "none",
@@ -112,10 +123,13 @@ export default function Main() {
                 </button>
                 <button
                   onClick={(e) => {
-                    alert("삭제할까?");
-                    e.preventDefault();
-                    dispatch(deleteTodo(todo.id));
-
+                    if (userEmail === todo.author) {
+                      alert("삭제할까?");
+                      e.preventDefault();
+                      dispatch(deleteTodo(todo.id));
+                    } else {
+                      alert("작성자가 아니니 로그인해주세요.");
+                    }
                     //추가하기처럼 삭제기능을 가져와서 삭제하기
                   }}
                   style={{
