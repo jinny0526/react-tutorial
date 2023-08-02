@@ -5,13 +5,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editTodo } from "../redux/modules/todosSlice";
 
-export default function Edit({ userEmail }) {
+export default function Edit() {
   const todos = useSelector((state) => state.todos);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const todo = todos.find((todo) => todo.id === id);
   //or 연산자 알아보기 근데 이부분은 여전히 잘 모르겠음...
+  const userEmail = useSelector((state) => state.user.userEmail);
   const [newtitle, setNewtitle] = useState(todo?.title);
   const [newcontent, setNewcontent] = useState(todo?.content);
 

@@ -1,20 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-//초기값 만들기
+
 const initialState = {
-  currentUser: { userid: null, email: null },
-  isLogin: false,
+  userEmail: "",
 };
-//로그인 정보 넣기
-export const login = createSlice({
+
+const loginSlice = createSlice({
   name: "login",
   initialState,
   reducers: {
-    addCurrentUser(state, action) {
-      state.currentUser = action.payload.currentUser;
-      state.isLogin = action.payload.isLogin;
+    setUserEmail: (state, action) => {
+      state.userEmail = action.payload;
     },
   },
 });
-//밖으로 사용할 수 잇도록 내보내기
-export const { addCurrentUser } = login.actions;
-export default login.reducer;
+
+export const { setUserEmail } = loginSlice.actions;
+export default loginSlice.reducer;

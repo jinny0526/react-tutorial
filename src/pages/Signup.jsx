@@ -45,9 +45,9 @@ export default function Signup() {
 
       navigate("/");
     } catch (error) {
-      console.error("Signup Error:", error);
+      alert("회원가입을 다시 진행해주세요");
     }
-    //alert 창으로 바꾸기 코드 메세지나 이런걸 바꾸기
+    //alert("Signup Error: " + error.message);
   };
 
   return (

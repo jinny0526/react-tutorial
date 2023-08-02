@@ -5,8 +5,9 @@ import Container from "../common/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTodo } from "../redux/modules/todosSlice";
 
-export default function Main({ userEmail }) {
+export default function Main() {
   const todos = useSelector((state) => state.todos);
+  const userEmail = useSelector((state) => state.user.userEmail);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
