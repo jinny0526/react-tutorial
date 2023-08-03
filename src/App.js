@@ -8,19 +8,22 @@ import Edit from "./pages/Edit";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "@firebase/auth";
 import { auth } from "./firebase";
+import { useDispatch } from "react-redux";
+import { setUser } from "./redux/modules/user";
 
 function App() {
-  const [userEmail, setUserEmail] = useState();
-
+  const dispatch = useDispatch();
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserEmail(user.email);
-      } else {
-        setUserEmail("");
-      }
+      dispatch(setUser(user?.email));
+      //?를 걸어주지 않으면 정보값이 제대로 뜨지 않을 수 있기에 무조건 걸어주기!
     });
   }, []);
+
+  // 리턴에서 함수를 만들면useEffet 안의 클린업 함수 기존의 것을 정리해주는 느낌 자바스크립트 강의 settimeout 광고창 부분 참고하기
+  //자기 스스로를 없애주는 함수를 하나 리턴해준다.
+  //실행을 시키면서 계속 쌓이는 걸 방지해준다.
+
   //새로고침을 할때나 없어질때나 기존에 있던 애를 삭제하고 다시 만들어주는 것, 쌓이는 걸 방지해줌
   // 언제 동작한다를 알아야한다. {}에 들어있는 함수가 화면에 그림을 다 그리고 나서 실행되는 것, 화면에 그리는 것과 상관없는 코드를
   // 화면에 먼저 그림을 그리고 그  {}안에 들어가는 건 나중에 해도 되는 애들, 화면에 아무것도 안나오는걸 방지하기 위해 사용

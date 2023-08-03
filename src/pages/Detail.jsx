@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTodo } from "../redux/modules/todosSlice";
+import { deleteTodo } from "../redux/modules/todos";
 
 export default function Detail() {
   const todos = useSelector((state) => state.todos);
@@ -12,7 +11,18 @@ export default function Detail() {
   const { id } = useParams();
 
   const todo = todos.find((todo) => todo.id === id);
-  const userEmail = useSelector((state) => state.user.userEmail);
+  const user = useSelector((state) => state.user);
+
+  const 로그인확인 = () => {
+    if (!user.email) return false;
+    return true;
+  };
+
+  const 작성자확인 = (author) => {
+    if (user.email !== author) return false;
+    return true;
+  };
+
   return (
     <>
       <Header />
@@ -24,7 +34,7 @@ export default function Detail() {
             padding: "12px",
           }}
         >
-          {todo.title}
+          {todo?.title}
           {/* 여기가 없을 수도 있다. */}
         </h1>
         <div
@@ -35,7 +45,7 @@ export default function Detail() {
             padding: "12px",
           }}
         >
-          {todo.content}
+          {todo?.content}
         </div>
         <div
           style={{
@@ -46,11 +56,18 @@ export default function Detail() {
         >
           <button
             onClick={() => {
-              if (userEmail === todo.author) {
-                navigate(`/edit/${todo.id}`);
-              } else {
-                alert("작성자가 아니니 로그인해주세요.");
+              if (!로그인확인()) {
+                return alert("로그인 후 사용할 수 있습니다.");
               }
+
+              if (!작성자확인(todo.author)) {
+                return alert("작성자가 일치하지 않습니다.");
+              }
+              navigate(`/edit/${todo.id}`, {
+                state: {
+                  todo,
+                },
+              });
             }}
             style={{
               border: "none",
@@ -65,15 +82,19 @@ export default function Detail() {
             수정
           </button>
           <button
-            onClick={(e) => {
-              if (userEmail === todo.author) {
-                alert("삭제할까?");
-                e.preventDefault();
-                dispatch(deleteTodo(todo.id));
-              } else {
-                alert("작성자가 아니니 로그인해주세요.");
+            onClick={() => {
+              if (!로그인확인()) {
+                return alert("로그인 후 사용할 수 있습니다.");
               }
-              //추가하기처럼 삭제기능을 가져와서 삭제하기
+
+              if (!작성자확인(todo.author)) {
+                return alert("작성자가 일치하지 않습니다.");
+              }
+              const result = window.confirm("정말로 삭제하시겠습니까?");
+              if (result) {
+                dispatch(deleteTodo(todo.id));
+                navigate("/");
+              }
             }}
             style={{
               border: "none",

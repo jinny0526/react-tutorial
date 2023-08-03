@@ -4,17 +4,35 @@ import Container from "../common/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
-import { addTodo } from "../redux/modules/todosSlice";
-import { auth } from "../firebase";
+import { addTodo } from "../redux/modules/todos";
 
 export default function Create() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const user = useSelector((state) => state.user);
+  const [ctinputs, setCtInputs] = useState({
+    title: "",
+    content: "",
+  });
+  //밑의 두개를 합쳐서 사용할 수 있는 것을 기억하자!!
+  // const [title, setTitle] = useState("");
+  // const [content, setContent] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const 현재이메일 = auth.currentUser.email;
-  //파이어베이스에 저장된 사용자의 이메일이 있는지 확인하고 있는 경우 인증된 사용자의 이메일을 띄운다.
+
+  const 추가새고방지 = (e) => {
+    const { value, name } = e.target;
+    setCtInputs({
+      ...ctinputs,
+      [name]: value,
+    });
+  };
+
+  //이렇게 두개를 합쳐서 사용하는건 사실 생각안해봤는데 공부 다시 해봐야겠다.
+  //onChange={(e) => {setTitle(e.target.value);}}
+  //항상 이런 방식으로 그냥 하나하나 만들어서 사용했는데 앞으론 위로 다 빼서 써봐야겠다.
+
+  // const 현재이메일 = auth.currentUser.email;
+  // //파이어베이스에 저장된 사용자의 이메일이 있는지 확인하고 있는 경우 인증된 사용자의 이메일을 띄운다.
 
   return (
     <>
@@ -27,14 +45,24 @@ export default function Create() {
             flexDirection: "column",
             justifyContent: "space-evenly",
           }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            dispatch(
+              addTodo({
+                id: nanoid(),
+                author: user.email,
+                ...ctinputs,
+              })
+            );
+            navigate("/");
+          }}
         >
           <div>
             <input
               placeholder="제목"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
+              value={ctinputs.title}
+              onChange={추가새고방지}
+              name="title"
               style={{
                 width: "100%",
                 height: "60px",
@@ -53,10 +81,9 @@ export default function Create() {
           >
             <textarea
               placeholder="내용"
-              value={content}
-              onChange={(e) => {
-                setContent(e.target.value);
-              }}
+              value={ctinputs.content}
+              onChange={추가새고방지}
+              name="content"
               style={{
                 resize: "none",
                 height: "100%",
@@ -85,9 +112,8 @@ export default function Create() {
               dispatch(
                 addTodo({
                   id: nanoid(),
-                  title: title,
-                  content: content,
-                  author: 현재이메일,
+                  author: user.email,
+                  ...ctinputs,
                 })
               );
 

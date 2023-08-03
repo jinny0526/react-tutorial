@@ -40,9 +40,7 @@ const todos = createSlice({
     editTodo: (state, action) => {
       return state.map(
         (todo) =>
-          todo.id === action.payload.id
-            ? { ...todo, ...action.payload.changes }
-            : todo
+          todo.id === action.payload.id ? { ...todo, ...action.payload } : todo
         // post.id === state?.post.id? { ...post, ...inputs, } : post); 이부분 참고했습니다
         // todo를 가져오기 changes는 바뀌는 부분 다 넣어서 해결하기
         //기존갑하고 비교해서 수정하기

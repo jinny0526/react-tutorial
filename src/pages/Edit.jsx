@@ -1,39 +1,43 @@
 import React, { Fragment, useEffect, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { editTodo } from "../redux/modules/todosSlice";
+import { editTodo } from "../redux/modules/todos";
 
 export default function Edit() {
   const todos = useSelector((state) => state.todos);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const todo = todos.find((todo) => todo.id === id);
-  //or 연산자 알아보기 근데 이부분은 여전히 잘 모르겠음...
-  const userEmail = useSelector((state) => state.user.userEmail);
-  const [newtitle, setNewtitle] = useState(todo?.title);
-  const [newcontent, setNewcontent] = useState(todo?.content);
+  const todo = todos.find((todo) => todo?.id === id);
 
-  const EditTodo = (e) => {
-    e.preventDefault();
-    if (userEmail === todo.author) {
-      //게시물의 author가 로그인한 이메일과 일치할 경우
-      dispatch(
-        editTodo({
-          id: todo.id,
-          changes: {
-            title: newtitle,
-            content: newcontent,
-          },
-        })
-      );
-      navigate("/");
-    } else {
-      //아닐 경우
-      alert("게시물 작성자만 수정할 수 있습니다.");
-    }
+  //or 연산자 알아보기 근데 이부분은 여전히 잘 모르겠음...
+
+  // const [newtitle, setNewtitle] = useState(todo?.title);
+  // const [newcontent, setNewcontent] = useState(todo?.content);
+  //밑을 아래로 바꾸고 합쳐보기인데 or 연산자를 어떻게 사용하는지 이제야 이해함
+  const [newInputs, setNewInputs] = useState({
+    newtitle: todo?.title || "",
+    newcontent: todo?.content || "",
+  });
+
+  const 편집새로고침방지 = (e) => {
+    const { value, name } = e.target;
+    setNewInputs({
+      ...newInputs,
+      [name]: value,
+    });
+  };
+
+  const EditBt = () => {
+    const newTodo = {
+      ...todo,
+      title: newInputs.newtitle,
+      content: newInputs.newcontent,
+    };
+    dispatch(editTodo(newTodo));
+    navigate("/");
   };
 
   return (
@@ -47,14 +51,17 @@ export default function Edit() {
             flexDirection: "column",
             justifyContent: "space-evenly",
           }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            console.log("제출!");
+          }}
         >
           <div>
             <input
               placeholder="제목"
-              value={newtitle}
-              onChange={(e) => {
-                setNewtitle(e.target.value);
-              }}
+              value={newInputs.newtitle}
+              name="newtitle"
+              onChange={편집새로고침방지}
               style={{
                 width: "100%",
                 height: "60px",
@@ -73,10 +80,9 @@ export default function Edit() {
           >
             <textarea
               placeholder="내용"
-              value={newcontent}
-              onChange={(e) => {
-                setNewcontent(e.target.value);
-              }}
+              value={newInputs.newcontent}
+              onChange={편집새로고침방지}
+              name="newcontent"
               style={{
                 resize: "none",
                 height: "100%",
@@ -90,7 +96,7 @@ export default function Edit() {
             />
           </div>
           <button
-            onClick={EditTodo}
+            onClick={EditBt}
             style={{
               width: "100%",
               height: "40px",

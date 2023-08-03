@@ -2,51 +2,61 @@ import React, { useEffect, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  const [userInputs, setUserInputs] = useState({
+    email: "",
+    password: "",
+  });
+  const 로그인새고방지 = (e) => {
+    const { value, name } = e.target;
+    setUserInputs({
+      ...userInputs,
+      [name]: value,
+    });
+  };
 
-  const dispatch = useDispatch();
-
-  const signInFunc = async (e) => {
-    e.preventDefault();
-
-    if (!email || !password) {
-      return alert("이메일과 비밀번호 둘다 입력해주세요");
+  const isValidForm = () => {
+    if (!userInputs.email) {
+      alert("이메일을 입력해주세요.");
+      return false;
     }
+
+    if (!userInputs.password) {
+      alert("비밀번호를 입력해주세요.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const signInFunc = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(
+      await signInWithEmailAndPassword(
         auth,
-        email,
-        password
+        userInputs.email,
+        userInputs.password
       );
-
-      //const user = userCredential.user;
-      // //유저의 정보를 추가하는 법 근데 안쓰더라...
-      // dispatch(
-      //   addCurrentUser({
-      //     currentUser: {
-      //       name: "nickname",
-      //     },
-      //     isLogin: true,
-      //   })
-      // );
-
+      setUserInputs({
+        email: "",
+        password: "",
+      });
+      // 홈으로 이동
       navigate("/");
     } catch (error) {
-      console.log(error.code);
       if (error.code === "auth/user-not-found") {
         alert("해당 이메일에 대한 계정이 없습니다.");
+      } else if (error.code === "auth/invalid-email") {
+        return alert("이메일 주소가 유효하지 않습니다.");
+      } else if (error.code === "auth/user-not-found") {
+        return alert("일치하는 유저의 정보가 없습니다.");
       } else if (error.code === "auth/wrong-password") {
         alert("비밀번호가 일치하지 않습니다.");
-      } else {
-        alert("무엇이 문제인지 파악되지않았으니 기다려주세요.");
-        //파이어베이스가 잘못된 경우도 있을 수 있음 ,공식문서보고 더 찾아서 넣기
       }
     }
   };
@@ -72,11 +82,10 @@ export default function Login() {
             >
               <input
                 placeholder="이메일"
-                value={email}
+                value={userInputs.email}
+                //저렇게 묶어놨으면 저런식으로 value값도 수정해야된다.
                 name="email"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                onChange={로그인새고방지}
                 style={{
                   width: "100%",
                   height: "40px",
@@ -96,12 +105,9 @@ export default function Login() {
             >
               <input
                 placeholder="비밀번호"
-                value={password}
+                value={userInputs.password}
+                onChange={로그인새고방지}
                 name="password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                type="password"
                 style={{
                   width: "100%",
                   height: "40px",
@@ -120,6 +126,12 @@ export default function Login() {
               }}
             >
               <button
+                type="button"
+                onClick={async () => {
+                  if (isValidForm()) {
+                    await signInFunc();
+                  }
+                }}
                 style={{
                   width: "100%",
                   border: "none",
@@ -129,7 +141,6 @@ export default function Login() {
                   color: "white",
                   cursor: "pointer",
                 }}
-                onClick={signInFunc}
               >
                 로그인하기
               </button>
