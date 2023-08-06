@@ -71,72 +71,73 @@ export default function Detail() {
     <>
       <Header />
       <Container>
-        {로그인확인() && 작성자확인(todo.author) && (
-          <>
-            <h1
+        {/* {로그인확인() && 작성자확인(todo.author) && ( )}
+          이걸 써야된다고 생각한 이유 위로 기능을 다 빼버렸으니까 and 연산자로 조건을 걸어줘야 내가 작성한 것을 볼 수 있게 되는 것이 아닌가
+          하는 미친 생각으로 시도 그리고 내가 작성한 글만 딱 상세페이지가 보이게 됨 그래서 이건 아니다싶어서 
+          지웠더니 그냥 다 보임 희대의 쓸데없는 짓을 함 */}
+        <>
+          <h1
+            style={{
+              border: "1px solid lightgray",
+              borderRadius: "12px",
+              padding: "12px",
+            }}
+          >
+            {todo?.title}
+            {/* 여기가 없을 수도 있다. */}
+          </h1>
+          <div
+            style={{
+              height: "400px",
+              border: "1px solid lightgray",
+              borderRadius: "12px",
+              padding: "12px",
+            }}
+          >
+            {todo?.content}
+          </div>
+          <div
+            style={{
+              marginTop: "12px",
+              display: "flex",
+              justifyContent: "end",
+            }}
+          >
+            <button
+              onClick={() => {
+                navigate(`/edit/${todo.id}`, {
+                  state: {
+                    todo,
+                  },
+                });
+              }}
               style={{
-                border: "1px solid lightgray",
-                borderRadius: "12px",
-                padding: "12px",
+                border: "none",
+                padding: "8px",
+                borderRadius: "6px",
+                backgroundColor: "orange",
+                color: "white",
+                cursor: "pointer",
+                marginRight: "6px",
               }}
             >
-              {todo?.title}
-              {/* 여기가 없을 수도 있다. */}
-            </h1>
-            <div
+              수정
+            </button>
+            <button
+              onClick={deleteTodo}
               style={{
-                height: "400px",
-                border: "1px solid lightgray",
-                borderRadius: "12px",
-                padding: "12px",
+                border: "none",
+                padding: "8px",
+                borderRadius: "6px",
+                backgroundColor: "red",
+                color: "white",
+                cursor: "pointer",
               }}
             >
-              {todo?.content}
-            </div>
-            <div
-              style={{
-                marginTop: "12px",
-                display: "flex",
-                justifyContent: "end",
-              }}
-            >
-              <button
-                onClick={() => {
-                  navigate(`/edit/${todo.id}`, {
-                    state: {
-                      todo,
-                    },
-                  });
-                }}
-                style={{
-                  border: "none",
-                  padding: "8px",
-                  borderRadius: "6px",
-                  backgroundColor: "orange",
-                  color: "white",
-                  cursor: "pointer",
-                  marginRight: "6px",
-                }}
-              >
-                수정
-              </button>
-              <button
-                onClick={deleteTodo}
-                style={{
-                  border: "none",
-                  padding: "8px",
-                  borderRadius: "6px",
-                  backgroundColor: "red",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                삭제
-              </button>
-            </div>
-          </>
-        )}
+              삭제
+            </button>
+          </div>
+        </>
       </Container>
     </>
   );
-}
