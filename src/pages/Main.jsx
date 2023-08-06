@@ -41,7 +41,7 @@ export default function Main() {
   //삭제버튼 만들기
   const mutation = useMutation(
     //Mutation : 어떤 데이터를 변경하는 것
-    async (id) => {
+    async ({ id, author }) => {
       if (user.email !== author) {
         alert("해당 글의 작성자가 아닙니다.");
       } else if (window.confirm("삭제할까??")) {
@@ -62,6 +62,24 @@ export default function Main() {
       },
     }
   );
+
+  const deleteTodo = async (id, author) => {
+    //아이디와 작성자 모두가 필요
+    if (!로그인확인()) {
+      return alert("로그인 후 사용할 수 있습니다.");
+    }
+    if (!작성자확인(author)) {
+      return alert("작성자가 일치하지 않습니다.");
+    }
+    const result = window.confirm("정말로 삭제하시겠습니까?");
+
+    if (result) {
+      await mutation.mutateAsync({ id, author });
+      ////mutation.mutate(인자) → 한개의 변수 또는 객체
+      navigate("/");
+    }
+  };
+
   if (isLoading) {
     return <div>데이터 가져오는 중...</div>;
   }
@@ -170,8 +188,8 @@ export default function Main() {
                 </button>
                 <button
                   onClick={() => {
-                    mutation.mutate({ id: todo.id, author: todo.author });
-                    //mutation.mutate(인자) → 한개의 변수 또는 객체
+                    deleteTodo(todo.id, todo.author);
+                    //아이디와 작성자 둘다가 필요한데 필요한것은 그 글을 작성한 아이디이므로 todo를 꼭 붙여야한다.
                   }}
                   style={{
                     border: "none",
@@ -192,9 +210,3 @@ export default function Main() {
     </>
   );
 }
-
-      </Container>
-    </>
-  );
-}
-
