@@ -1,22 +1,17 @@
 import React, { Fragment, useEffect, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { editTodo } from "../redux/modules/todos";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useMutation, useQueryClient } from "react-query";
+import api from "../axios/api";
 
 export default function Edit() {
   const todos = useSelector((state) => state.todos);
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
   const todo = todos.find((todo) => todo?.id === id);
-
-  //or 연산자 알아보기 근데 이부분은 여전히 잘 모르겠음...
-
-  // const [newtitle, setNewtitle] = useState(todo?.title);
-  // const [newcontent, setNewcontent] = useState(todo?.content);
-  //밑을 아래로 바꾸고 합쳐보기인데 or 연산자를 어떻게 사용하는지 이제야 이해함
   const [newInputs, setNewInputs] = useState({
     newtitle: todo?.title || "",
     newcontent: todo?.content || "",
@@ -30,13 +25,26 @@ export default function Edit() {
     });
   };
 
+  const queryClient = new useQueryClient();
+
+  const mutation = useMutation(
+    async (editedValue) => {
+      await api.put(`/todos/${state?.todo.id}`, editedValue);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("todos");
+      },
+    }
+  );
+  //편집버튼에 새함수에 모든 값을 다 넣고 mutation.mutate(editTodo)값을 넣고 추가해줌
   const EditBt = () => {
-    const newTodo = {
+    const editTodo = {
       ...todo,
       title: newInputs.newtitle,
       content: newInputs.newcontent,
     };
-    dispatch(editTodo(newTodo));
+    mutation.mutate(editTodo);
     navigate("/");
   };
 

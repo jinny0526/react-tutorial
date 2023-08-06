@@ -4,21 +4,40 @@ import Container from "../common/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
-import { addTodo } from "../redux/modules/todos";
+
+import { useMutation, useQueryClient } from "react-query";
+import api from "../axios/api";
 
 export default function Create() {
+  const queryClient = new useQueryClient();
+
   const user = useSelector((state) => state.user);
+  //메인하고 같은 방식을 사용해서  전체값을 들고오고 해오기 근데 방식이 비슷해서 굳이 설명안적어도 될 것 같음.
+
+  const mutation = useMutation(
+    async () => {
+      const newTodo = {
+        id: nanoid(),
+        author: user.email,
+        ...ctinputs,
+      };
+      await api.todo("/items", newTodo);
+      navigate("/");
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("todos");
+      },
+    }
+  );
+
   const [ctinputs, setCtInputs] = useState({
     title: "",
     content: "",
   });
-  //밑의 두개를 합쳐서 사용할 수 있는 것을 기억하자!!
-  // const [title, setTitle] = useState("");
-  // const [content, setContent] = useState("");
 
+  //이부분은 그냥 합쳐서 만들기
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   const 추가새고방지 = (e) => {
     const { value, name } = e.target;
     setCtInputs({
@@ -26,13 +45,6 @@ export default function Create() {
       [name]: value,
     });
   };
-
-  //이렇게 두개를 합쳐서 사용하는건 사실 생각안해봤는데 공부 다시 해봐야겠다.
-  //onChange={(e) => {setTitle(e.target.value);}}
-  //항상 이런 방식으로 그냥 하나하나 만들어서 사용했는데 앞으론 위로 다 빼서 써봐야겠다.
-
-  // const 현재이메일 = auth.currentUser.email;
-  // //파이어베이스에 저장된 사용자의 이메일이 있는지 확인하고 있는 경우 인증된 사용자의 이메일을 띄운다.
 
   return (
     <>
@@ -47,14 +59,7 @@ export default function Create() {
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            dispatch(
-              addTodo({
-                id: nanoid(),
-                author: user.email,
-                ...ctinputs,
-              })
-            );
-            navigate("/");
+            mutation.mutate();
           }}
         >
           <div>
@@ -105,19 +110,6 @@ export default function Create() {
               borderRadius: "12px",
               backgroundColor: "skyblue",
               cursor: "pointer",
-            }}
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(
-                addTodo({
-                  id: nanoid(),
-                  author: user.email,
-                  ...ctinputs,
-                })
-              );
-
-              navigate("/");
             }}
           >
             추가하기

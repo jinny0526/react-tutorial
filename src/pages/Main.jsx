@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteTodo } from "../redux/modules/todos";
+import { useSelector } from "react-redux";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import api from "../axios/api";
 
 export default function Main() {
-  const todos = useSelector((state) => state.todos);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
+  const queryClient = new useQueryClient();
+
+  //중복되는 부분을 따로 빼서 가져와야 혼이 안날꺼같긴한데 일단 2군데만 써서 넘어갔어요
   const user = useSelector((state) => state.user);
 
   const 로그인확인 = () => {
@@ -22,6 +24,48 @@ export default function Main() {
     return true;
   };
 
+  const {
+    isLoading,
+    data: todos,
+    error,
+    isError,
+  } = useQuery("todos", async () => {
+    const response = await api.get("/todos");
+    return response.data;
+  });
+  //이게 표준방법이라고 해서 일단은 그렇구나 하고 넘어감
+  //api로 긴 주소 따로 빼주기
+
+  //삭제버튼 만들기
+  const mutation = useMutation(
+    //Mutation : 어떤 데이터를 변경하는 것
+    async (id) => {
+      if (user.email !== author) {
+        alert("해당 글의 작성자가 아닙니다.");
+      } else if (window.confirm("삭제할까??")) {
+        // 데이터베이스에서 삭제
+        api.delete(`/todos/${id}`);
+      }
+    },
+    // 데이터 추가 후 화면 바로 변경
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("todos");
+        //**invalidate의 과정]**
+        //Input.jsx에서 값 입력으로 인해 서버 데이터가 변경됨
+        //onSuccess가 일어나면 기존의 Query인 “todos”는 무효화
+        //새로운 데이터를 가져와서 “todos”를 최신화시킴
+        //TodoList.jsx를 갱신함
+      },
+    }
+  );
+  if (isLoading) {
+    return <div>데이터 가져오는 중...</div>;
+  }
+
+  if (isError) {
+    return <div>{error.message}</div>;
+  }
   return (
     <>
       <Header />
@@ -132,17 +176,8 @@ export default function Main() {
                 </button>
                 <button
                   onClick={() => {
-                    if (!로그인확인()) {
-                      return alert("로그인이 필요합니다.");
-                    }
-                    if (!작성자확인(todo.author)) {
-                      return alert("작성자가 아닙니다.");
-                    }
-                    const result = window.confirm("정말로 삭제하시겠습니까?");
-                    //이부분 공부해보기
-                    if (result) {
-                      dispatch(deleteTodo(todo.id));
-                    }
+                    mutation.mutate({ id: todo.id, author: todo.author });
+                    //mutation.mutate(인자) → 한개의 변수 또는 객체
                   }}
                   style={{
                     border: "none",

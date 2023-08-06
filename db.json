@@ -1,10 +1,24 @@
 {
-  "posts": [
+  "todos": [
     {
-      "id": 1,
-      "title": "제목예시",
-      "content": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem ipsum dolor, sit amet consectetur adipisicing elit.Lorem ipsum dolor, sit amet consectetur adipisicing elit.Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
-      "author": "abc@naver.com"
+      "id": "1",
+      "title": "회원가입",
+      "content": "오류대잔치",
+      "author": "바보1"
+    },
+
+    {
+      "id": "2()",
+      "title": "로그인",
+      "content": "뭐가 다 난리다.",
+      "author": "바보2"
+    },
+
+    {
+      "id": "3",
+      "title": "타입스크립트",
+      "content": "못하겠다.",
+      "author": "바보3"
     }
   ]
 }
