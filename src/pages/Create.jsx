@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
 
@@ -15,14 +15,10 @@ export default function Create() {
   //메인하고 같은 방식을 사용해서  전체값을 들고오고 해오기 근데 방식이 비슷해서 굳이 설명안적어도 될 것 같음.
 
   const mutation = useMutation(
-    async () => {
-      const newTodo = {
-        id: nanoid(),
-        author: user.email,
-        ...ctinputs,
-      };
+    async (newTodo) => {
       await api.post("/todos", newTodo);
-      navigate("/");
+      //axios.post(url[, data[, config]])   // POST
+      //post는 보통 서버에 데이터를 추가할 때 사용
     },
     {
       onSuccess: () => {
@@ -36,7 +32,7 @@ export default function Create() {
     content: "",
   });
 
-  //이부분은 그냥 합쳐서 만들기
+  //이부분은 그냥 합쳐서 만듬
   const navigate = useNavigate();
   const 추가새고방지 = (e) => {
     const { value, name } = e.target;
@@ -59,7 +55,12 @@ export default function Create() {
           }}
           onSubmit={(e) => {
             e.preventDefault();
-            mutation.mutate();
+            mutation.mutate({
+              id: nanoid(),
+              author: user.email,
+              ...ctinputs,
+            });
+            navigate("/");
           }}
         >
           <div>
