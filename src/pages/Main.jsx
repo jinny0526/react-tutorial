@@ -31,6 +31,8 @@ export default function Main() {
     isError,
   } = useQuery("todos", async () => {
     const response = await api.get("/todos");
+    //get은 서버의 데이터를 조회할 때 사용한다.
+
     return response.data;
   });
   //이게 표준방법이라고 해서 일단은 그렇구나 하고 넘어감
@@ -45,6 +47,7 @@ export default function Main() {
       } else if (window.confirm("삭제할까??")) {
         // 데이터베이스에서 삭제
         api.delete(`/todos/${id}`);
+        //DELETE는 저장되어 있는 데이터를 삭제하고자 요청을 보낼 때 사용한다.
       }
     },
     // 데이터 추가 후 화면 바로 변경
@@ -198,3 +201,4 @@ export default function Main() {
     </>
   );
 }
+
