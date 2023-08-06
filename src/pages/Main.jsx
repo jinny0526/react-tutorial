@@ -110,16 +110,7 @@ export default function Main() {
           >
             <div
               onClick={() => {
-                if (!로그인확인()) {
-                  return alert("로그인 후 사용할 수 있습니다.");
-                }
-
-                if (!작성자확인(todo.author)) {
-                  return alert("작성자가 일치하지 않습니다.");
-                }
-                navigate(`/edit/`, {
-                  state: todo,
-                });
+                navigate(`/detail/${todo.id}`);
               }}
               style={{
                 flex: 4,
@@ -197,6 +188,11 @@ export default function Main() {
             </div>
           </div>
         ))}
+      </Container>
+    </>
+  );
+}
+
       </Container>
     </>
   );
