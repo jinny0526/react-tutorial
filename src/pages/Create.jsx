@@ -21,7 +21,7 @@ export default function Create() {
         author: user.email,
         ...ctinputs,
       };
-      await api.todo("/todos", newTodo);
+      await api.post("/todos", newTodo);
       navigate("/");
     },
     {
