@@ -2,20 +2,22 @@ import React, { Fragment, useEffect, useState } from "react";
 import Header from "../common/Header";
 import Container from "../common/Container";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import api from "../axios/api";
 
 export default function Edit() {
-  const todos = useSelector((state) => state.todos);
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const todo = todos.find((todo) => todo?.id === id);
+  // const [newInputs, setNewInputs] = useState({
+  //   newtitle: todo?.title || "",
+  //   newcontent: todo?.content || "",
+  // });
   const [newInputs, setNewInputs] = useState({
-    newtitle: todo?.title || "",
-    newcontent: todo?.content || "",
+    newtitle: "",
+    newcontent: "",
   });
+  //Cannot access 'todo' before initialization 오류메세지 이지경으로 떠서 그냥 이걸 지워버렸다...
 
   const 편집새로고침방지 = (e) => {
     const { value, name } = e.target;
@@ -27,9 +29,19 @@ export default function Edit() {
 
   const queryClient = new useQueryClient();
 
+  const { data, isLoading, isError, error } = useQuery("todos", async () => {
+    const response = await api.get("/todos");
+    return response.data;
+  });
+
+  //맞는 아이디값 찾아오기
+  const todo = data.find((todo) => {
+    return todo.id === id;
+  });
+
   const mutation = useMutation(
     async (editedValue) => {
-      await api.put(`/todos/${state?.todo.id}`, editedValue);
+      await api.put(`/todos/${todo.id}`, editedValue);
     },
     {
       onSuccess: () => {
@@ -47,6 +59,13 @@ export default function Edit() {
     mutation.mutate(editTodo);
     navigate("/");
   };
+  if (isLoading) {
+    return <div>데이터 가져오는 중...</div>;
+  }
+
+  if (isError) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <Fragment>
@@ -122,3 +141,4 @@ export default function Edit() {
     </Fragment>
   );
 }
+
